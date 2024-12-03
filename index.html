@@ -19,6 +19,8 @@
             padding: 10px;
             border-radius: 4px;
             background-color: #ffebee;
+            white-space: pre-wrap;
+            word-break: break-word;
         }
         .loading {
             color: #666;
@@ -90,12 +92,22 @@
                             <p>${data.details || 'Please wait about an hour before trying again.'}</p>
                         </div>`;
                 } else if (!response.ok) {
-                    outputDiv.innerHTML = `<p class="error">Error: ${data.error}<br>${data.details || ''}</p>`;
+                    outputDiv.innerHTML = `<div class="error">
+                        <strong>Error ${response.status}</strong>
+                        <br>Message: ${data.error || 'Unknown error'}
+                        <br>Details: ${data.details || 'No details available'}
+                        ${data.requestBody ? '<br>Request: ' + JSON.stringify(data.requestBody, null, 2) : ''}
+                        ${data.response ? '<br>Response: ' + JSON.stringify(data.response, null, 2) : ''}
+                    </div>`;
                 } else {
                     outputDiv.innerHTML = `<img src="${data.url}" alt="Generated Image">`;
                 }
             } catch (error) {
-                outputDiv.innerHTML = `<p class="error">Error: ${error.message}</p>`;
+                outputDiv.innerHTML = `<div class="error">
+                    <strong>Error</strong>
+                    <br>Message: ${error.message}
+                    <br>Stack: ${error.stack || 'No stack trace available'}
+                </div>`;
             } finally {
                 // Re-enable button
                 generateBtn.disabled = false;
